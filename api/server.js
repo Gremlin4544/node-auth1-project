@@ -4,10 +4,16 @@ const cors = require("cors");
 const session = require('express-session');
 
 const usersRouter = require("../users/users-router.js");
-const authRouter = require('../auth/router.js');
+// const authRouter = require('../auth/router.js');
 const restricted = require("../auth/restricted-middleware.js");
 
 const server = express();
+server.use(express.json());
+server.use(helmet());
+
+server.use(cors());
+
+server.use('/api/users', usersRouter);
 
 const sessionConfig = {
   name: 'alveRules', //default name is sid - always rename
@@ -18,7 +24,7 @@ const sessionConfig = {
     httpOnly: true, //true means that JS in the browser or JS anywhere, will not have access
   },
   resave: false,
-  saveUninitialized: true, //GDPR laws require you to ask the client - cannot set cookies to save automatically
+  saveUninitialized: false, //GDPR laws require you to ask the client - cannot set cookies to save automatically
 };
 
 server.use(helmet());
@@ -26,8 +32,8 @@ server.use(express.json());
 server.use(cors());
 server.use(session(sessionConfig));
 
-server.use("/api/users", restricted, usersRouter);
-server.use("/api/auth", authRouter)
+server.use("/", usersRouter);
+// server.use("/api/auth", authRouter)
 
 server.use((err, req, res, next) => {
     console.log(err);

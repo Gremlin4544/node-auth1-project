@@ -1,4 +1,3 @@
-
 const bcrypt = require('bcryptjs');
 
 const router = require('express').Router();
@@ -15,7 +14,7 @@ router.post('/register', (req, res) => {
 
     userInfo.password = hash;
 
-  Users.add(req.body)
+  Users.add(userInfo)
     .then(users => {
       res.json(users);
     })
